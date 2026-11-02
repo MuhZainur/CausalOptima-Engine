@@ -7,7 +7,7 @@ name = "causaloptima-engine"
 version = "0.1.0"
 description = "Algorithmic Causal AI & Uplift Decision Platform with EconML and DoWhy"
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.11,<3.12"
 authors = [
     { name = "Muhammad Zainur" }
 ]
