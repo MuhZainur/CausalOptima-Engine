@@ -1,0 +1,59 @@
+{
+  "scope": "Synthetic data with known treatment effects; not a field experiment.",
+  "margin_rate": 0.4,
+  "cost_per_treatment": 2.5,
+  "customers_per_seed": 50000,
+  "runs": [
+    {
+      "seed": 42,
+      "average_effect": {
+        "true": 5.89,
+        "naive_difference": 17.32,
+        "backdoor_adjusted_ols": 6.42
+      },
+      "holdout_customers": 15000,
+      "targeted_by_t_learner": 3349,
+      "holdout_profit": {
+        "oracle_true_effects": 34791.29,
+        "t_learner": 34618.26,
+        "double_ml": 24545.62,
+        "top_predicted_spend_same_budget": 7107.59,
+        "treat_everyone": -2595.6
+      }
+    },
+    {
+      "seed": 7,
+      "average_effect": {
+        "true": 5.91,
+        "naive_difference": 17.12,
+        "backdoor_adjusted_ols": 6.54
+      },
+      "holdout_customers": 15000,
+      "targeted_by_t_learner": 3367,
+      "holdout_profit": {
+        "oracle_true_effects": 34811.37,
+        "t_learner": 34555.82,
+        "double_ml": 24949.13,
+        "top_predicted_spend_same_budget": 7022.79,
+        "treat_everyone": -2767.28
+      }
+    },
+    {
+      "seed": 123,
+      "average_effect": {
+        "true": 5.76,
+        "naive_difference": 17.16,
+        "backdoor_adjusted_ols": 6.56
+      },
+      "holdout_customers": 15000,
+      "targeted_by_t_learner": 3340,
+      "holdout_profit": {
+        "oracle_true_effects": 34631.05,
+        "t_learner": 34463.55,
+        "double_ml": 24288.96,
+        "top_predicted_spend_same_budget": 6929.23,
+        "treat_everyone": -2828.82
+      }
+    }
+  ]
+}

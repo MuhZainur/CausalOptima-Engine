@@ -35,6 +35,30 @@ flowchart LR
 
 ---
 
+## 📊 Measured Results
+
+The data is synthetic, which makes the true treatment effects known and lets each policy be scored against them. This is not a field experiment. Reproduce with `python scripts/measure_policy.py`; full output for seeds 42, 7, and 123 is in [`reports/policy_benchmark.json`](reports/policy_benchmark.json).
+
+Models fit on 35,000 customers. Policies are scored on a 15,000-customer holdout, with a 40% margin and a 2.50 cost per treatment.
+
+| Policy | Net profit across three seeds |
+| :--- | :--- |
+| Oracle (true effects) | 34,631-34,811 |
+| T-learner | 34,464-34,618 |
+| Double ML (LinearDML) | 24,289-24,949 |
+| Top predicted spend, same budget as T-learner | 6,929-7,108 |
+| Treat everyone | -2,596 to -2,829 |
+
+| Average effect | Across three seeds |
+| :--- | :--- |
+| True effect | 5.76-5.91 |
+| Naive treated-versus-control difference | 17.12-17.32 |
+| Backdoor-adjusted OLS | 6.42-6.56 |
+
+**Known limitation:** `LinearDML` is linear in its features, while the simulated effects are piecewise, which probably explains its gap to the T-learner. EconML also warns that the treatment model is a regressor on a discrete target. Neither has been changed.
+
+---
+
 ## 🚀 Quickstart & Setup
 
 ```bash
@@ -48,7 +72,7 @@ source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 # 3. Install Dependencies
 uv pip install -e ".[dev]"
 
-# 4. Generate Semi-Synthetic Causal Benchmark Data
+# 4. Generate Synthetic Causal Benchmark Data
 python -m src.data.generator
 
 # 5. Start Decision Recommendation API
