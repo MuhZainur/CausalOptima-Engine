@@ -17,6 +17,7 @@ from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
 
 from src.data.generator import generate_causal_data
+from src.evaluation.metrics import compute_qini_curve
 from src.models.uplift import DMLUplift, FEATURE_COLS, TLearnerUplift
 
 SEEDS = [42, 7, 123]
@@ -51,8 +52,25 @@ def run_seed(seed):
     design = np.column_stack([df["treatment"].values, df[FEATURE_COLS].values])
     backdoor = LinearRegression().fit(design, df["outcome"].values).coef_[0]
 
+    def estimator_quality(cate):
+        mask = cate > BREAKEVEN_TAU
+        return {
+            "targeted_share": round(float(mask.mean()), 3),
+            "mean_true_effect_of_targeted": round(float(true_tau[mask].mean()), 2),
+            "correlation_with_true_effect": round(float(np.corrcoef(cate, true_tau)[0, 1]), 3),
+            "rmse": round(float(np.sqrt(np.mean((cate - true_tau) ** 2))), 2),
+            "qini_auuc": round(compute_qini_curve(test["outcome"].values, test["treatment"].values, cate)[2], 0),
+        }
+
+    groups = df.groupby("quadrant")["true_tau"].agg(["size", "mean"])
+
     return {
         "seed": seed,
+        "groups": {
+            name: {"share": round(row["size"] / len(df), 3), "mean_true_effect": round(row["mean"], 2)}
+            for name, row in groups.iterrows()
+        },
+        "estimators": {"t_learner": estimator_quality(t_cate), "double_ml": estimator_quality(dml_cate)},
         "average_effect": {
             "true": round(float(df["true_tau"].mean()), 2),
             "naive_difference": round(float(naive), 2),
